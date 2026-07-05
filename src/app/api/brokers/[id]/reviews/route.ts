@@ -22,7 +22,14 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     if (!v.success) return NextResponse.json({ error: "Invalid rating" }, { status: 400 });
 
     const review = await prisma.review.create({
-      data: { userId: session.user.id, brokerId, ...v.data, isApproved: false },
+      data: {
+        userId: session.user.id,
+        brokerId,
+        rating: v.data.rating,
+        title: v.data.title,
+        body: v.data.body,
+        isApproved: false,
+      },
     });
     return NextResponse.json({ message: "Review submitted for approval", review }, { status: 201 });
   } catch (err: any) {
