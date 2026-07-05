@@ -1,0 +1,292 @@
+@import "tailwindcss";
+
+@theme {
+  /* Type */
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  /* Color: ink (near-black navy), paper (warm off-white), teal (primary
+     action), gold (naira accent, used sparingly for data/trust highlights) */
+  --color-ink: #0B1E2D;
+  --color-ink-soft: #57687A;
+  --color-paper: #FAF8F3;
+  --color-paper-dim: #F2EFE6;
+  --color-teal: #049C88;
+  --color-teal-deep: #036F60;
+  --color-teal-tint: #E3F3EF;
+  --color-gold: #E3A857;
+  --color-gold-tint: #FBF0DD;
+  --color-line: #E7E2D6;
+
+  /* State colors used across forms, badges, and alerts site-wide */
+  --color-danger: #DC2626;
+  --color-danger-tint: #FEF2F2;
+  --color-warning: #D97706;
+  --color-warning-tint: #FEF3C7;
+  --color-warning-border: #FDE68A;
+  --color-info: #3B82F6;
+  --color-info-tint: #EFF6FF;
+  --color-info-border: #BFDBFE;
+  --color-indigo: #6366F1;
+  --color-indigo-tint: #EEF2FF;
+  --color-slate: #374151;
+  --color-success: #16A34A;
+  --color-success-tint: #BBF7D0;
+  --color-danger-border: #FCA5A5;
+  --color-indigo-border: #C7D2FE;
+  --color-purple: #8B5CF6;
+  --color-purple-deep: #7C3AED;
+  --color-purple-tint: #F3E8FF;
+  --color-orange: #F97316;
+  --color-yellow: #EAB308;
+  --color-red: #EF4444;
+  --color-ink-deep: #08141F;
+
+  /* Text-on-dark scale, used on the ink-colored hero/footer instead of
+     one-off grays */
+  --color-on-ink: #B6C2CC;
+  --color-on-ink-muted: #8B98A6;
+  --color-on-ink-faint: #6B7A89;
+  --color-gold-deep: #8A6318;
+}
+
+:root {
+  /* Legacy aliases kept so existing inline styles/components still resolve
+     while pages are migrated to the token system above. */
+  --sw-green: var(--color-teal);
+  --sw-green-dark: var(--color-teal-deep);
+  --sw-green-light: var(--color-teal-tint);
+  --sw-navy: var(--color-ink);
+  --sw-gray: var(--color-ink-soft);
+  --sw-border: var(--color-line);
+  --sw-bg: var(--color-paper);
+  --sw-white: #FFFFFF;
+  --sw-text: var(--color-ink);
+  --sw-text-muted: var(--color-ink-soft);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+/* Tabular figures wherever a number needs to line up predictably:
+   prices, trust scores, stats. */
+.sw-figure {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   Reusable component classes.
+   These centralize patterns repeated across many pages (buttons,
+   badges, cards, inputs) so changing a color or radius means
+   editing this file once, not every page that uses it.
+   ============================================================ */
+
+.sw-card {
+  background: #FFFFFF;
+  border: 1px solid var(--color-line);
+  border-radius: 1rem;
+}
+
+.sw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.sw-btn-primary {
+  background: var(--color-teal);
+  color: #FFFFFF;
+}
+.sw-btn-primary:hover {
+  background: var(--color-teal-deep);
+}
+
+.sw-btn-outline {
+  background: transparent;
+  border: 1px solid var(--color-line);
+  color: var(--color-ink);
+}
+.sw-btn-outline:hover {
+  background: var(--color-paper-dim);
+}
+
+.sw-btn-danger {
+  background: var(--color-danger-tint);
+  color: var(--color-danger);
+}
+.sw-btn-danger:hover {
+  background: #FEE2E2;
+}
+
+.sw-text-brand {
+  color: var(--color-teal);
+}
+.sw-text-ink {
+  color: var(--color-ink);
+}
+.sw-text-muted {
+  color: var(--color-ink-soft);
+}
+
+.sw-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.sw-badge-teal   { background: var(--color-teal-tint); color: var(--color-teal-deep); }
+.sw-badge-gold   { background: var(--color-gold-tint); color: #8A6318; }
+.sw-badge-danger { background: var(--color-danger-tint); color: var(--color-danger); }
+.sw-badge-warning{ background: var(--color-warning-tint); color: var(--color-warning); }
+.sw-badge-info   { background: var(--color-info-tint); color: var(--color-info); }
+.sw-badge-indigo { background: var(--color-indigo-tint); color: var(--color-indigo); }
+.sw-badge-slate  { background: var(--color-paper-dim); color: var(--color-ink-soft); }
+
+.sw-input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-line);
+  font-size: 0.875rem;
+  background: #FFFFFF;
+  color: var(--color-ink);
+}
+.sw-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-teal-tint);
+  border-color: var(--color-teal);
+}
+
+.sw-hero-gradient {
+  background: linear-gradient(135deg, var(--color-ink) 0%, #0D2137 100%);
+}
+.sw-cta-gradient {
+  background: linear-gradient(135deg, var(--color-teal), var(--color-teal-deep));
+}
+
+/* Page transition loader */
+.page-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--sw-green), var(--sw-green-dark));
+  z-index: 9999;
+  animation: loader 1.2s ease-in-out infinite;
+}
+
+@keyframes loader {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Prose styles for lesson content */
+.lesson-content h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--sw-navy);
+  margin: 2rem 0 1rem;
+}
+
+.lesson-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--sw-navy);
+  margin: 1.5rem 0 0.75rem;
+}
+
+.lesson-content p {
+  margin-bottom: 1rem;
+  color: #374151;
+  line-height: 1.8;
+}
+
+.lesson-content ul,
+.lesson-content ol {
+  margin: 1rem 0 1rem 1.5rem;
+}
+
+.lesson-content li {
+  margin-bottom: 0.5rem;
+  color: #374151;
+}
+
+.lesson-content strong {
+  font-weight: 600;
+  color: var(--sw-navy);
+}
+
+.lesson-content blockquote {
+  border-left: 4px solid var(--sw-green);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: var(--sw-gray);
+  font-style: italic;
+}
+
+/* Quill editor overrides */
+.ql-toolbar {
+  border: 1px solid var(--sw-border) !important;
+  border-radius: 8px 8px 0 0 !important;
+  background: #F9FAFB;
+}
+
+.ql-container {
+  border: 1px solid var(--sw-border) !important;
+  border-top: none !important;
+  border-radius: 0 0 8px 8px !important;
+  min-height: 400px;
+  font-family: inherit !important;
+  font-size: 1rem !important;
+}
+
+.ql-editor {
+  min-height: 400px;
+  padding: 1.25rem !important;
+  line-height: 1.8 !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #F3F4F6; }
+::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }

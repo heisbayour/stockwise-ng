@@ -1,0 +1,271 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  phone         String?  @unique
+  passwordHash  String
+
+  firstName     String?
+  lastName      String?
+  nin           String?
+  address       String?
+
+  emailVerified Boolean  @default(false)
+  phoneVerified Boolean  @default(false)
+  ninSubmitted  Boolean  @default(false)
+  ninVerified   Boolean  @default(false)
+  isOnboarded   Boolean  @default(false)
+  isActive      Boolean  @default(true)
+
+  role          Role     @default(USER)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  otpTokens         OtpToken[]
+  reviews           Review[]
+  savedBrokers      SavedBroker[]
+  watchlist         Watchlist[]
+  learningProgress  LearningProgress[]
+  scamReports       ScamReport[]
+  notifications     Notification[]
+  articles          Article[]
+
+  @@map("users")
+}
+
+enum Role {
+  USER
+  AUTHOR
+  ADMIN
+  SUPERUSER
+}
+
+model OtpToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  code      String
+  type      OtpType
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("otp_tokens")
+}
+
+enum OtpType {
+  EMAIL_VERIFICATION
+  PHONE_VERIFICATION
+  PASSWORD_RESET
+}
+
+model Broker {
+  id                String     @id @default(cuid())
+  slug              String     @unique
+  name              String
+  type              BrokerType
+  logoUrl           String?
+  website           String
+  // referralLink is Stockwise's unique affiliate/referral URL for this broker
+  // When users click "Open Account", they go through this link so we earn commission
+  referralLink      String?
+  description       String
+  shortDescription  String?
+
+  secLicensed       Boolean    @default(false)
+  secLicenseNumber  String?
+  yearsOperating    Int?
+
+  minimumDeposit    Float?
+  tradingFeePercent Float?
+  accountOpeningFee Float?
+
+  supportedAssets   String[]
+  accountTypes      String[]
+  features          String[]
+
+  email             String?
+  phone             String?
+  address           String?
+
+  trustScore        Float?     @default(0)
+  isActive          Boolean    @default(true)
+  isVerified        Boolean    @default(false)
+  isFeatured        Boolean    @default(false)
+  displayOrder      Int?       @default(0)
+
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  reviews           Review[]
+  savedBy           SavedBroker[]
+  requirements      BrokerRequirement[]
+  // BrokerClick tracks every time a user clicks "Open Account" for analytics
+  clicks            BrokerClick[]
+
+  @@map("brokers")
+}
+
+enum BrokerType {
+  TRADITIONAL
+  DIGITAL
+}
+
+model BrokerRequirement {
+  id         String  @id @default(cuid())
+  brokerId   String
+  broker     Broker  @relation(fields: [brokerId], references: [id], onDelete: Cascade)
+  item       String
+  isRequired Boolean @default(true)
+  note       String?
+
+  @@map("broker_requirements")
+}
+
+// Tracks every referral click so we can report to brokers and measure revenue
+model BrokerClick {
+  id         String   @id @default(cuid())
+  brokerId   String
+  broker     Broker   @relation(fields: [brokerId], references: [id], onDelete: Cascade)
+  userId     String?  // null if not logged in
+  ipAddress  String?
+  userAgent  String?
+  referrer   String?
+  createdAt  DateTime @default(now())
+
+  @@map("broker_clicks")
+}
+
+model Review {
+  id         String  @id @default(cuid())
+  userId     String
+  brokerId   String
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  broker     Broker  @relation(fields: [brokerId], references: [id], onDelete: Cascade)
+  rating     Int
+  title      String?
+  body       String?
+  isVerified Boolean @default(false)
+  isApproved Boolean @default(false)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, brokerId])
+  @@map("reviews")
+}
+
+model SavedBroker {
+  id        String   @id @default(cuid())
+  userId    String
+  brokerId  String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  broker    Broker   @relation(fields: [brokerId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, brokerId])
+  @@map("saved_brokers")
+}
+
+model Watchlist {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ticker      String
+  companyName String
+  addedAt     DateTime @default(now())
+
+  @@unique([userId, ticker])
+  @@map("watchlist")
+}
+
+model Article {
+  id           String          @id @default(cuid())
+  slug         String          @unique
+  title        String
+  excerpt      String
+  content      String
+  coverImage   String?
+  category     ArticleCategory
+  lessonNumber Int?
+  readingTime  Int?
+  isPublished  Boolean         @default(false)
+  publishedAt  DateTime?
+  authorId     String?
+  author       User?           @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  authorName   String          @default("Stockwise Team")
+  tags         String[]
+
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  progress     LearningProgress[]
+
+  @@map("articles")
+}
+
+enum ArticleCategory {
+  LESSON
+  GUIDE
+  NEWS
+  FAQ
+}
+
+model LearningProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  articleId   String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article     Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  completed   Boolean  @default(false)
+  completedAt DateTime?
+  lastRead    DateTime @default(now())
+
+  @@unique([userId, articleId])
+  @@map("learning_progress")
+}
+
+model ScamReport {
+  id           String       @id @default(cuid())
+  userId       String?
+  user         User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  platformName String
+  platformUrl  String?
+  description  String
+  evidenceUrls String[]
+  status       ReportStatus @default(PENDING)
+  adminNote    String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@map("scam_reports")
+}
+
+enum ReportStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  RESOLVED
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
+}
