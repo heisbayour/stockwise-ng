@@ -1,9 +1,8 @@
 // src/app/api/admin/upload/route.ts
-// Handles cover image uploads for articles
-// Uses Cloudinary (free tier: 25GB) - set CLOUDINARY_URL in .env
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { createHash } from "crypto";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -17,27 +16,26 @@ export async function POST(req: NextRequest) {
 
     if (!file) return NextResponse.json({ error: "No file provided" }, { status: 400 });
 
-    // Validate file type
     const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json({ error: "Only JPEG, PNG, WebP, and GIF images are allowed" }, { status: 400 });
     }
 
-    // Validate file size (5MB max)
     if (file.size > 5 * 1024 * 1024) {
       return NextResponse.json({ error: "File size must be under 5MB" }, { status: 400 });
     }
 
     const cloudinaryUrl = process.env.CLOUDINARY_URL;
     if (!cloudinaryUrl) {
-      // Fallback: return a placeholder if Cloudinary isn't configured yet
-      console.warn("CLOUDINARY_URL not set - returning placeholder");
+      console.warn("CLOUDINARY_URL not set");
       return NextResponse.json({ url: "/placeholder-cover.jpg" });
     }
 
-    // Parse Cloudinary URL: cloudinary://api_key:api_secret@cloud_name
+    // Parse cloudinary://API_KEY:API_SECRET@CLOUD_NAME
     const match = cloudinaryUrl.match(/cloudinary:\/\/(\d+):([^@]+)@(.+)/);
-    if (!match) return NextResponse.json({ error: "Invalid Cloudinary configuration" }, { status: 500 });
+    if (!match) {
+      return NextResponse.json({ error: "Invalid CLOUDINARY_URL format" }, { status: 500 });
+    }
 
     const [, apiKey, apiSecret, cloudName] = match;
 
@@ -46,14 +44,14 @@ export async function POST(req: NextRequest) {
     const base64 = buffer.toString("base64");
     const dataUri = `data:${file.type};base64,${base64}`;
 
-    // Upload to Cloudinary
     const timestamp = Math.round(Date.now() / 1000);
     const folder = "stockwise/articles";
 
-    // Generate signature
-    const { createHmac } = await import("crypto");
-    const signatureString = `folder=${folder}&timestamp=${timestamp}${apiSecret}`;
-    const signature = createHmac("sha256", apiSecret).update(signatureString).digest("hex");
+    // Cloudinary signature: SHA-1 of sorted params + api_secret (NOT HMAC)
+    // Params must be sorted alphabetically, joined with &, then append api_secret
+    const paramString = `folder=${folder}&timestamp=${timestamp}`;
+    const toSign = paramString + apiSecret;
+    const signature = createHash("sha1").update(toSign).digest("hex");
 
     const uploadForm = new FormData();
     uploadForm.append("file", dataUri);
@@ -67,12 +65,13 @@ export async function POST(req: NextRequest) {
       { method: "POST", body: uploadForm }
     );
 
+    const uploadData = await uploadRes.json();
+
     if (!uploadRes.ok) {
-      const err = await uploadRes.json();
-      return NextResponse.json({ error: err.error?.message ?? "Upload failed" }, { status: 500 });
+      console.error("Cloudinary error:", uploadData);
+      return NextResponse.json({ error: uploadData.error?.message ?? "Upload failed" }, { status: 500 });
     }
 
-    const uploadData = await uploadRes.json();
     return NextResponse.json({ url: uploadData.secure_url });
   } catch (err) {
     console.error("Upload error:", err);

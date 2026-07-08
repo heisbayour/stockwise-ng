@@ -1,6 +1,5 @@
 "use client";
 // src/components/admin/ArticleEditor.tsx
-// Full CMS editor using Quill 2.0 rich text editor
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
@@ -41,7 +40,6 @@ export default function ArticleEditor({ article, authors, currentUserId }: Props
   const [readingTime, setReadingTime] = useState(article?.readingTime?.toString() ?? "");
   const [isPublished, setIsPublished] = useState(article?.isPublished ?? false);
   const [authorId, setAuthorId] = useState(article?.authorId ?? currentUserId);
-  const [authorName, setAuthorName] = useState(article?.authorName ?? "Stockwise Team");
   const [tags, setTags] = useState(article?.tags?.join(", ") ?? "");
   const [coverImage, setCoverImage] = useState(article?.coverImage ?? "");
   const [saving, setSaving] = useState(false);
@@ -53,16 +51,19 @@ export default function ArticleEditor({ article, authors, currentUserId }: Props
   }
 
   useEffect(() => {
-    if (!article?.slug) {
-      setSlug(generateSlug(title));
-    }
+    if (!article?.slug) setSlug(generateSlug(title));
   }, [title]);
 
   useEffect(() => {
     if (!editorRef.current || quillRef.current) return;
 
-    import("quill").then(({ default: Quill }) => {
-      if (!editorRef.current) return;
+    // Import both Quill JS and its CSS dynamically to avoid SSR issues
+    // The CSS import fixes the broken toolbar arrows you were seeing
+    Promise.all([
+      import("quill"),
+      import("quill/dist/quill.snow.css" as any),
+    ]).then(([{ default: Quill }]) => {
+      if (!editorRef.current || quillRef.current) return;
 
       quillRef.current = new Quill(editorRef.current, {
         theme: "snow",
@@ -84,45 +85,37 @@ export default function ArticleEditor({ article, authors, currentUserId }: Props
       }
     });
 
-    return () => {
-      quillRef.current = null;
-    };
+    return () => { quillRef.current = null; };
   }, []);
 
   async function handleCoverUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploadingCover(true);
-
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("type", "cover");
-
     try {
       const res = await fetch("/api/admin/upload", { method: "POST", body: formData });
       const data = await res.json();
       if (res.ok) setCoverImage(data.url);
       else setMessage({ text: data.error || "Upload failed", ok: false });
-    } catch { setMessage({ text: "Upload failed. Check your connection.", ok: false }); }
+    } catch { setMessage({ text: "Upload failed. Check connection.", ok: false }); }
     setUploadingCover(false);
   }
 
   async function handleSave(publish?: boolean) {
     setSaving(true);
     setMessage({ text: "", ok: true });
-
     const content = quillRef.current?.root.innerHTML ?? article?.content ?? "";
-
     const payload = {
       title, slug, excerpt, content, category,
       lessonNumber: lessonNumber ? parseInt(lessonNumber) : null,
       readingTime: readingTime ? parseInt(readingTime) : null,
       isPublished: publish !== undefined ? publish : isPublished,
-      authorId, authorName,
+      authorId,
       tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
       coverImage: coverImage || null,
     };
-
     try {
       const isNew = !article?.id;
       const res = await fetch(`/api/admin/articles${isNew ? "" : `/${article!.id}`}`, {
@@ -132,14 +125,11 @@ export default function ArticleEditor({ article, authors, currentUserId }: Props
       });
       const data = await res.json();
       if (!res.ok) { setMessage({ text: data.error || "Save failed", ok: false }); setSaving(false); return; }
-
       setMessage({ text: publish ? "Published!" : "Saved as draft", ok: true });
       if (publish !== undefined) setIsPublished(publish);
-      if (isNew && data.id) {
-        router.push(`/admin/articles/${data.id}`);
-      }
+      if (isNew && data.id) router.push(`/admin/articles/${data.id}`);
       router.refresh();
-    } catch { setMessage({ text: "Network error. Please try again.", ok: false }); }
+    } catch { setMessage({ text: "Network error.", ok: false }); }
     setSaving(false);
   }
 
@@ -168,7 +158,7 @@ export default function ArticleEditor({ article, authors, currentUserId }: Props
 
         <div className="editor-quill-wrap">
           <div className="editor-quill-header">Content</div>
-          <div ref={editorRef} className="editor-quill-mount" />
+          <div ref={editorRef} />
         </div>
       </div>
 
@@ -196,7 +186,6 @@ export default function ArticleEditor({ article, authors, currentUserId }: Props
 
         <div className="editor-card">
           <h3 className="editor-card-title">Metadata</h3>
-
           <div className="editor-field">
             <label className="form-label">Category</label>
             <select value={category} onChange={(e) => setCategory(e.target.value)} className="form-select">
@@ -206,7 +195,6 @@ export default function ArticleEditor({ article, authors, currentUserId }: Props
               <option value="FAQ">FAQ</option>
             </select>
           </div>
-
           {category === "LESSON" && (
             <div className="editor-field">
               <label className="form-label">Lesson Number</label>
@@ -214,13 +202,11 @@ export default function ArticleEditor({ article, authors, currentUserId }: Props
                 onChange={(e) => setLessonNumber(e.target.value)} className="form-input" placeholder="1-10" />
             </div>
           )}
-
           <div className="editor-field">
             <label className="form-label">Reading Time (minutes)</label>
             <input type="number" min="1" value={readingTime}
               onChange={(e) => setReadingTime(e.target.value)} className="form-input" placeholder="5" />
           </div>
-
           <div className="editor-field">
             <label className="form-label">Author</label>
             <select value={authorId} onChange={(e) => setAuthorId(e.target.value)} className="form-select">
@@ -231,7 +217,6 @@ export default function ArticleEditor({ article, authors, currentUserId }: Props
               ))}
             </select>
           </div>
-
           <div className="editor-field">
             <label className="form-label">Tags (comma separated)</label>
             <input value={tags} onChange={(e) => setTags(e.target.value)} className="form-input" placeholder="beginner, investing, NGX" />
@@ -240,19 +225,22 @@ export default function ArticleEditor({ article, authors, currentUserId }: Props
 
         <div className="editor-card">
           <h3 className="editor-card-title">Cover Image</h3>
-          {coverImage && <img src={coverImage} alt="Cover" className="editor-cover-preview" />}
+          {/* Small thumbnail preview - not full width */}
+          {coverImage && (
+            <div className="editor-cover-thumb-wrap">
+              <img src={coverImage} alt="Cover preview" className="editor-cover-thumb" />
+              <button onClick={() => setCoverImage("")} className="editor-remove-cover">
+                Remove
+              </button>
+            </div>
+          )}
           <label className="editor-upload-label">
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            {uploadingCover ? "Uploading..." : "Upload Cover Image"}
+            {uploadingCover ? "Uploading..." : coverImage ? "Change Image" : "Upload Cover Image"}
             <input type="file" accept="image/*" onChange={handleCoverUpload} className="hidden" />
           </label>
-          {coverImage && (
-            <button onClick={() => setCoverImage("")} className="editor-remove-cover">
-              Remove image
-            </button>
-          )}
         </div>
       </div>
     </div>
