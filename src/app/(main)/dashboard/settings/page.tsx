@@ -21,8 +21,8 @@ export default async function SettingsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-1 sw-text-ink">Account Settings</h1>
-      <p className="text-gray-500 text-sm mb-6">Manage your profile and account information</p>
+      <h1 className="dash-page-title">Account Settings</h1>
+      <p className="dash-page-sub">Manage your profile and account information</p>
       <SettingsForm user={user} />
     </div>
   );

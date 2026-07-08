@@ -31,16 +31,11 @@ export default function AdminArticleActions({ articleId, isPublished }: { articl
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <button onClick={toggle} disabled={loading}
-        className="text-xs font-medium px-2.5 py-1.5 rounded-lg border disabled:opacity-50 transition-colors"
-        style={isPublished
-          ? { borderColor: "var(--color-danger-border)", color: "var(--color-danger)" }
-          : { borderColor: "var(--color-success-tint)", color: "var(--color-success)" }}>
+    <div className="admin-action-row">
+      <button onClick={toggle} disabled={loading} className={`admin-btn ${isPublished ? "admin-btn-red" : "admin-btn-green"}`}>
         {loading ? "..." : isPublished ? "Unpublish" : "Publish"}
       </button>
-      <button onClick={deleteArticle} disabled={loading}
-        className="text-xs font-medium px-2.5 py-1.5 rounded-lg border border-red-100 text-red-500 hover:bg-red-50 disabled:opacity-50">
+      <button onClick={deleteArticle} disabled={loading} className="admin-btn admin-btn-red">
         Delete
       </button>
     </div>

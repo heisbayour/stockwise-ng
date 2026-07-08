@@ -35,25 +35,20 @@ export default function AdminBrokerActions({ broker }: { broker: BrokerData }) {
     setLoading(null);
   }
 
-  const btnClass = "text-xs font-medium px-2.5 py-1.5 rounded-lg border transition-colors disabled:opacity-50";
-
   return (
-    <div className="flex items-center gap-1.5 flex-wrap">
+    <div className="admin-action-row">
       <button onClick={() => action("setActive", !broker.isActive)} disabled={loading === "setActive"}
-        className={btnClass}
-        style={broker.isActive ? { borderColor: "var(--color-danger-border)", color: "var(--color-danger)" } : { borderColor: "var(--color-success-tint)", color: "var(--color-success)" }}>
+        className={`admin-btn ${broker.isActive ? "admin-btn-red" : "admin-btn-green"}`}>
         {loading === "setActive" ? "..." : broker.isActive ? "Hide" : "Show"}
       </button>
 
       <button onClick={() => action("setFeatured", !broker.isFeatured)} disabled={loading === "setFeatured"}
-        className={btnClass}
-        style={broker.isFeatured ? { borderColor: "var(--color-line)", color: "var(--color-ink-soft)" } : { borderColor: "var(--color-indigo-border)", color: "var(--color-indigo)" }}>
+        className={`admin-btn ${broker.isFeatured ? "admin-btn-slate" : "admin-btn-indigo"}`}>
         {loading === "setFeatured" ? "..." : broker.isFeatured ? "Unfeature" : "Feature"}
       </button>
 
       {broker.pendingReviews > 0 && (
-        <button onClick={approveAllReviews} disabled={loading === "reviews"}
-          className={btnClass} style={{ borderColor: "var(--color-warning-border)", color: "var(--color-warning)" }}>
+        <button onClick={approveAllReviews} disabled={loading === "reviews"} className="admin-btn admin-btn-gold">
           {loading === "reviews" ? "..." : `Approve ${broker.pendingReviews} reviews`}
         </button>
       )}

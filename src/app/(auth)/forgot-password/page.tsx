@@ -49,95 +49,88 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="w-full max-w-md">
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-        {step === "done" ? (
-          <div className="text-center">
-            <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center bg-[color:var(--color-teal-tint)]">
-              <svg className="w-8 h-8 sw-text-brand" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <h1 className="text-2xl font-bold mb-2 sw-text-ink">Password reset!</h1>
-            <p className="text-gray-500 mb-6">Your password has been updated successfully.</p>
-            <Link href="/login" className="inline-flex items-center justify-center w-full py-3 rounded-xl font-semibold text-white sw-btn-primary">
-              Sign In Now
-            </Link>
+    <div className="auth-card">
+      {step === "done" ? (
+        <div className="text-center">
+          <div className="auth-success-icon">
+            <svg width="32" height="32" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
           </div>
-        ) : (
-          <>
-            <div className="mb-8">
-              <h1 className="text-2xl font-bold sw-text-ink">
-                {step === "email" ? "Reset your password" : step === "code" ? "Enter reset code" : "Set new password"}
-              </h1>
-              <p className="mt-1 text-sm text-gray-500">
-                {step === "email" ? "Enter your email and we'll send a reset code"
-                  : step === "code" ? `We sent a code to ${email}`
-                  : "Choose a strong new password"}
-              </p>
+          <h1 className="auth-card-title">Password reset!</h1>
+          <p className="auth-card-sub">Your password has been updated successfully.</p>
+          <Link href="/login" className="btn btn-primary btn-full">Sign In Now</Link>
+        </div>
+      ) : (
+        <>
+          <h1 className="auth-card-title">
+            {step === "email" ? "Reset your password" : step === "code" ? "Enter reset code" : "Set new password"}
+          </h1>
+          <p className="auth-card-sub">
+            {step === "email" ? "Enter your email and we'll send a reset code"
+              : step === "code" ? `We sent a code to ${email}`
+              : "Choose a strong new password"}
+          </p>
+
+          {error && (
+            <div className="alert alert-error">
+              <svg className="alert-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              {error}
             </div>
+          )}
 
-            {error && (
-              <div className="mb-5 p-3 rounded-xl text-sm sw-badge-danger">{error}</div>
-            )}
-
-            {step === "email" && (
-              <form onSubmit={handleEmailSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Email address</label>
-                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
-                    placeholder="you@example.com"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2" />
-                </div>
-                <button type="submit" disabled={loading}
-                  className="w-full py-3 rounded-xl font-semibold text-white disabled:opacity-60 sw-btn-primary">
-                  {loading ? "Sending..." : "Send Reset Code"}
-                </button>
-              </form>
-            )}
-
-            {step === "code" && (
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">6-digit code</label>
-                  <input type="text" value={code} onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))}
-                    placeholder="000000" maxLength={6}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm text-center tracking-widest text-xl font-bold focus:outline-none focus:ring-2" />
-                </div>
-                <button onClick={() => { if (code.length === 6) setStep("reset"); else setError("Enter the 6-digit code"); }}
-                  className="w-full py-3 rounded-xl font-semibold text-white sw-btn-primary">
-                  Continue
-                </button>
+          {step === "email" && (
+            <form onSubmit={handleEmailSubmit}>
+              <div className="form-group">
+                <label className="form-label">Email address</label>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
+                  placeholder="you@example.com" className="form-input" />
               </div>
-            )}
+              <button type="submit" disabled={loading} className="btn btn-primary btn-full">
+                {loading ? "Sending..." : "Send Reset Code"}
+              </button>
+            </form>
+          )}
 
-            {step === "reset" && (
-              <form onSubmit={handleReset} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">New password</label>
-                  <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required
-                    placeholder="Min. 8 characters"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Confirm new password</label>
-                  <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required
-                    placeholder="Repeat password"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2" />
-                </div>
-                <button type="submit" disabled={loading}
-                  className="w-full py-3 rounded-xl font-semibold text-white disabled:opacity-60 sw-btn-primary">
-                  {loading ? "Resetting..." : "Reset Password"}
-                </button>
-              </form>
-            )}
+          {step === "code" && (
+            <div>
+              <div className="form-group">
+                <label className="form-label">6-digit code</label>
+                <input type="text" value={code} onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))}
+                  placeholder="000000" maxLength={6} className="form-input form-input-code" />
+              </div>
+              <button onClick={() => { if (code.length === 6) setStep("reset"); else setError("Enter the 6-digit code"); }}
+                className="btn btn-primary btn-full">
+                Continue
+              </button>
+            </div>
+          )}
 
-            <p className="mt-6 text-center text-sm text-gray-500">
-              <Link href="/login" className="font-semibold sw-text-brand">Back to Sign In</Link>
-            </p>
-          </>
-        )}
-      </div>
+          {step === "reset" && (
+            <form onSubmit={handleReset}>
+              <div className="form-group">
+                <label className="form-label">New password</label>
+                <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required
+                  placeholder="Min. 8 characters" className="form-input" />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Confirm new password</label>
+                <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required
+                  placeholder="Repeat password" className="form-input" />
+              </div>
+              <button type="submit" disabled={loading} className="btn btn-primary btn-full">
+                {loading ? "Resetting..." : "Reset Password"}
+              </button>
+            </form>
+          )}
+
+          <p className="auth-footer-text">
+            <Link href="/login" className="form-link">Back to Sign In</Link>
+          </p>
+        </>
+      )}
     </div>
   );
 }

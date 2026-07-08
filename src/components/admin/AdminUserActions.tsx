@@ -29,40 +29,33 @@ export default function AdminUserActions({ user }: { user: UserData }) {
     setLoading(null);
   }
 
-  const btnClass = "text-xs font-medium px-2.5 py-1.5 rounded-lg border transition-colors disabled:opacity-50";
-
   return (
-    <div className="flex items-center gap-1.5 flex-wrap">
+    <div className="admin-action-row">
       {/* NIN verification */}
       {user.ninSubmitted && !user.ninVerified && (
-        <button onClick={() => action("verifyNin")} disabled={loading === "verifyNin"}
-          className={btnClass} style={{ borderColor: "var(--color-teal)", color: "var(--color-teal)" }}>
+        <button onClick={() => action("verifyNin")} disabled={loading === "verifyNin"} className="admin-btn admin-btn-teal">
           {loading === "verifyNin" ? "..." : "Verify NIN"}
         </button>
       )}
 
       {/* Role changes */}
       {user.role === "USER" && (
-        <button onClick={() => action("setRole", { role: "AUTHOR" })} disabled={loading === "setRole"}
-          className={btnClass} style={{ borderColor: "var(--color-warning)", color: "var(--color-warning)" }}>
+        <button onClick={() => action("setRole", { role: "AUTHOR" })} disabled={loading === "setRole"} className="admin-btn admin-btn-gold">
           Make Author
         </button>
       )}
       {user.role === "AUTHOR" && (
-        <button onClick={() => action("setRole", { role: "USER" })} disabled={loading === "setRole"}
-          className={btnClass} style={{ borderColor: "var(--color-line)", color: "var(--color-ink-soft)" }}>
+        <button onClick={() => action("setRole", { role: "USER" })} disabled={loading === "setRole"} className="admin-btn admin-btn-slate">
           Revoke Author
         </button>
       )}
       {(user.role === "USER" || user.role === "AUTHOR") && (
-        <button onClick={() => action("setRole", { role: "ADMIN" })} disabled={loading === "setRole"}
-          className={btnClass} style={{ borderColor: "var(--color-info)", color: "var(--color-info)" }}>
+        <button onClick={() => action("setRole", { role: "ADMIN" })} disabled={loading === "setRole"} className="admin-btn admin-btn-indigo">
           Make Admin
         </button>
       )}
       {user.role === "ADMIN" && (
-        <button onClick={() => action("setRole", { role: "USER" })} disabled={loading === "setRole"}
-          className={btnClass} style={{ borderColor: "var(--color-line)", color: "var(--color-ink-soft)" }}>
+        <button onClick={() => action("setRole", { role: "USER" })} disabled={loading === "setRole"} className="admin-btn admin-btn-slate">
           Remove Admin
         </button>
       )}
@@ -71,8 +64,7 @@ export default function AdminUserActions({ user }: { user: UserData }) {
       {user.role !== "SUPERUSER" && (
         <button onClick={() => action(user.isActive ? "suspend" : "activate")}
           disabled={loading === "suspend" || loading === "activate"}
-          className={btnClass}
-          style={user.isActive ? { borderColor: "var(--color-danger-border)", color: "var(--color-danger)" } : { borderColor: "var(--color-success-tint)", color: "var(--color-success)" }}>
+          className={`admin-btn ${user.isActive ? "admin-btn-red" : "admin-btn-green"}`}>
           {user.isActive ? "Suspend" : "Activate"}
         </button>
       )}

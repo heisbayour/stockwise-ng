@@ -587,6 +587,13 @@ h6 {
   margin-bottom: 2rem;
 }
 
+.auth-footer-text {
+  font-size: 0.875rem;
+  color: var(--color-ink-soft);
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
 /* ---- FORM ELEMENTS ---------------------------------------- */
 .form-group {
   margin-bottom: 1.125rem;
@@ -678,6 +685,13 @@ h6 {
   color: var(--color-ink);
 }
 
+.form-badge-inline {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .form-error {
   font-size: 0.75rem;
   color: var(--color-danger);
@@ -728,6 +742,25 @@ h6 {
   outline: none;
   border-color: var(--color-teal);
   box-shadow: 0 0 0 3px var(--color-teal-tint);
+}
+
+.form-input-code {
+  text-align: center;
+  letter-spacing: 0.5em;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.auth-success-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 1rem;
+  margin: 0 auto 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-teal-tint);
+  color: var(--color-teal-deep);
 }
 
 .form-checkbox-row {
@@ -831,6 +864,14 @@ h6 {
   width: 16px;
   height: 16px;
   animation: spin 0.8s linear infinite;
+}
+
+.spinner-track {
+  opacity: 0.25;
+}
+
+.spinner-head {
+  opacity: 0.75;
 }
 
 /* ---- ALERTS / BANNERS ------------------------------------- */
@@ -2177,6 +2218,22 @@ h6 {
   border-radius: 9999px;
 }
 
+.broker-cta-score-fill-warning {
+  background: linear-gradient(90deg, var(--color-warning), #B45309);
+}
+
+.broker-cta-score-fill-danger {
+  background: linear-gradient(90deg, var(--color-danger), #991B1B);
+}
+
+.broker-cta-score-val-warning {
+  color: var(--color-warning);
+}
+
+.broker-cta-score-val-danger {
+  color: var(--color-danger);
+}
+
 .broker-cta-fees {
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--color-line);
@@ -2317,6 +2374,10 @@ h6 {
   font-size: 0.875rem;
   color: var(--color-ink-soft);
   line-height: 1.65;
+}
+
+.review-verified-badge {
+  margin-left: 0.5rem;
 }
 
 .review-empty {
@@ -2926,6 +2987,10 @@ h6 {
   color: var(--color-teal);
 }
 
+.dash-stat-warning {
+  color: var(--color-warning);
+}
+
 .dash-stat-indigo {
   color: var(--color-indigo);
 }
@@ -3331,6 +3396,10 @@ h6 {
   margin-top: 0.875rem;
 }
 
+.settings-submit-btn {
+  margin-top: 1.25rem;
+}
+
 /* ---- ADMIN ----------------------------------------------- */
 .admin-layout {
   min-height: 100vh;
@@ -3428,6 +3497,15 @@ h6 {
   font-weight: 600;
 }
 
+.admin-nav-item-danger {
+  color: var(--color-danger);
+}
+
+.admin-nav-item-danger:hover {
+  background: var(--color-danger-tint);
+  color: var(--color-danger);
+}
+
 .admin-sidebar-footer {
   padding: 0.75rem;
   border-top: 1px solid var(--color-line);
@@ -3502,6 +3580,26 @@ h6 {
   justify-content: center;
 }
 
+.admin-stat-icon-indigo {
+  background: var(--color-indigo-tint);
+  color: var(--color-indigo);
+}
+
+.admin-stat-icon-teal {
+  background: var(--color-teal-tint);
+  color: var(--color-teal);
+}
+
+.admin-stat-icon-warning {
+  background: var(--color-warning-tint);
+  color: var(--color-warning);
+}
+
+.admin-stat-icon-purple {
+  background: var(--color-purple-tint);
+  color: var(--color-purple);
+}
+
 .admin-stat-val {
   font-size: 2rem;
   font-weight: 800;
@@ -3563,6 +3661,26 @@ h6 {
   font-size: 0.9375rem;
   font-weight: 700;
   color: var(--color-ink);
+}
+
+.admin-card-body {
+  padding: 1.5rem;
+}
+
+.admin-user-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.875rem;
+}
+
+.admin-user-row:last-child {
+  margin-bottom: 0;
+}
+
+.admin-user-info {
+  flex: 1;
+  min-width: 0;
 }
 
 .admin-card-link {
@@ -3645,6 +3763,11 @@ h6 {
 .admin-user-email {
   font-size: 0.75rem;
   color: var(--color-ink-soft);
+}
+
+.admin-clicks-val {
+  font-weight: 700;
+  color: var(--color-teal);
 }
 
 .admin-action-row {
@@ -3784,6 +3907,13 @@ h6 {
   margin-bottom: 1.25rem;
 }
 
+.admin-filter-form {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 .admin-filter-input {
   flex: 1;
   min-width: 200px;
@@ -3919,6 +4049,10 @@ h6 {
   font-size: 0.875rem;
   font-weight: 700;
   color: var(--color-ink);
+}
+
+.editor-quill-mount {
+  min-height: 400px;
 }
 
 .editor-cover-preview {
@@ -4133,6 +4267,12 @@ h6 {
   font-size: 0.9375rem;
   color: var(--color-ink-soft);
   line-height: 1.8;
+}
+
+.static-page-updated {
+  font-size: 0.8125rem;
+  color: var(--color-ink-muted);
+  margin-bottom: 2.5rem;
 }
 
 .contact-grid {

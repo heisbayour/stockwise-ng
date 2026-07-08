@@ -53,49 +53,45 @@ export default async function LessonPage({ params }: Props) {
     : null;
 
   return (
-    <main className="min-h-screen bg-white">
-      {/* Breadcrumb */}
-      <div className="border-b border-gray-100">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-2 text-sm text-gray-500">
-          <Link href="/learn" className="hover:text-gray-700 flex items-center gap-1">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <main className="lesson-page">
+      <div className="breadcrumb">
+        <div className="breadcrumb-inner">
+          <Link href="/learn" className="breadcrumb-link">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Back to Roadmap
+            {" "}Back to Roadmap
           </Link>
         </div>
       </div>
 
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
-        {/* Lesson header */}
-        <header className="mb-8">
+      <article className="lesson-body-inner">
+        <header className="lesson-header">
           {lesson.lessonNumber && (
-            <span className="text-xs font-semibold uppercase tracking-wider sw-text-brand">
-              Lesson {lesson.lessonNumber} of 10
-            </span>
+            <span className="lesson-eyebrow">Lesson {lesson.lessonNumber} of 10</span>
           )}
-          <h1 className="mt-2 text-3xl sm:text-4xl font-bold leading-tight sw-text-ink">
-            {lesson.title}
-          </h1>
-          <div className="flex items-center gap-4 mt-4 text-sm text-gray-400">
+          <h1 className="lesson-h1">{lesson.title}</h1>
+          <div className="lesson-meta-row">
             <span>{lesson.readingTime} min read</span>
+            <span className="lesson-meta-sep" />
             <span>By {lesson.author ? `${lesson.author.firstName} ${lesson.author.lastName}` : lesson.authorName}</span>
             {isCompleted && (
-              <span className="flex items-center gap-1 font-medium sw-text-brand">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                Completed
-              </span>
+              <>
+                <span className="lesson-meta-sep" />
+                <span className="lesson-done-badge">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Completed
+                </span>
+              </>
             )}
           </div>
         </header>
 
-        {/* Content */}
         <LessonContent content={lesson.content} />
 
-        {/* Mark complete */}
-        <div className="mt-10 pt-8 border-t border-gray-100">
+        <div className="lesson-mark-wrap">
           <MarkCompleteButton
             articleId={lesson.id}
             initiallyCompleted={isCompleted}
@@ -103,29 +99,26 @@ export default async function LessonPage({ params }: Props) {
           />
         </div>
 
-        {/* Navigation */}
-        <div className="mt-6 grid grid-cols-2 gap-4">
+        <div className="lesson-nav">
           {prevLesson ? (
-            <Link href={`/learn/${prevLesson.slug}`}
-              className="flex items-center gap-2 p-4 rounded-2xl border border-gray-100 hover:border-[color:var(--color-teal)] transition-all group">
-              <svg className="w-5 h-5 text-gray-300 group-hover:text-[color:var(--color-teal)] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <Link href={`/learn/${prevLesson.slug}`} className="lesson-nav-prev">
+              <svg className="lesson-nav-arrow" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              <div className="min-w-0">
-                <p className="text-xs text-gray-400">Previous</p>
-                <p className="text-sm font-medium text-gray-900 truncate">{prevLesson.title}</p>
+              <div>
+                <p className="lesson-nav-label">Previous</p>
+                <p className="lesson-nav-title truncate">{prevLesson.title}</p>
               </div>
             </Link>
           ) : <div />}
 
           {nextLesson && (
-            <Link href={`/learn/${nextLesson.slug}`}
-              className="flex items-center justify-end gap-2 p-4 rounded-2xl border border-gray-100 hover:border-[color:var(--color-teal)] transition-all group col-start-2">
-              <div className="min-w-0 text-right">
-                <p className="text-xs text-gray-400">Next Lesson</p>
-                <p className="text-sm font-medium text-gray-900 truncate">{nextLesson.title}</p>
+            <Link href={`/learn/${nextLesson.slug}`} className="lesson-nav-next">
+              <div>
+                <p className="lesson-nav-label text-right">Next Lesson</p>
+                <p className="lesson-nav-title truncate text-right">{nextLesson.title}</p>
               </div>
-              <svg className="w-5 h-5 text-gray-300 group-hover:text-[color:var(--color-teal)] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="lesson-nav-arrow" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </Link>

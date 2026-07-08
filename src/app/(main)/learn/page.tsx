@@ -30,63 +30,55 @@ export default async function LearnPage() {
   const pct = lessons.length ? Math.round((completed / lessons.length) * 100) : 0;
 
   return (
-    <main className="min-h-screen bg-white">
-      {/* Hero */}
-      <div style={{ background: "linear-gradient(135deg, #0A1628 0%, #0D2137 100%)" }} className="py-16">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <span className="text-xs font-semibold uppercase tracking-widest sw-text-brand">Free Education</span>
-          <h1 className="mt-3 text-3xl sm:text-4xl font-bold text-white">
-            Your Investing Roadmap
-          </h1>
-          <p className="mt-4 text-gray-300 leading-relaxed">
+    <main className="sw-page-white">
+      <div className="learn-page-hero">
+        <div className="learn-page-hero-inner">
+          <span className="learn-page-eyebrow">Free Education</span>
+          <h1 className="learn-page-title">Your Investing Roadmap</h1>
+          <p className="learn-page-desc">
             10 lessons. Zero jargon. Built for Nigerians starting from scratch. Learn how the stock market works, how to pick a broker, and how to make your first investment.
           </p>
           {session && lessons.length > 0 && (
-            <div className="mt-8 bg-white/10 rounded-2xl p-5 text-left">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-white">Your Progress</span>
-                <span className="text-sm font-semibold sw-text-brand">{completed}/{lessons.length} lessons</span>
+            <div className="learn-progress-bar-wrap">
+              <div className="learn-progress-row">
+                <span className="learn-progress-label">Your Progress</span>
+                <span className="learn-progress-count font-mono">{completed}/{lessons.length} lessons</span>
               </div>
-              <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
-                <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: "var(--color-teal)" }} />
+              <div className="learn-progress-track">
+                {/* Width is per-user numeric progress data; can't be a static class. */}
+                <div className="learn-progress-fill" style={{ width: `${pct}%` }} />
               </div>
             </div>
           )}
         </div>
       </div>
 
-      {/* Lessons */}
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+      <div className="learn-body">
         {lessons.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-gray-500">Lessons are coming soon. Check back shortly!</p>
+          <div className="dash-empty">
+            <p>Lessons are coming soon. Check back shortly!</p>
           </div>
         ) : (
-          <div className="space-y-3">
-            {lessons.map((lesson, index) => {
+          <div>
+            {lessons.map((lesson) => {
               const isDone = completedIds.has(lesson.id);
               return (
-                <Link key={lesson.id} href={`/learn/${lesson.slug}`}
-                  className="group flex items-center gap-4 p-5 rounded-2xl border transition-all hover:shadow-sm"
-                  style={{ borderColor: isDone ? "var(--color-teal)" : "var(--color-line)", background: isDone ? "var(--color-teal-tint)" : "white" }}>
-                  <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 font-bold text-sm transition-colors"
-                    style={{ background: isDone ? "var(--color-teal)" : "var(--color-paper-dim)", color: isDone ? "white" : "var(--color-ink-soft)" }}>
+                <Link key={lesson.id} href={`/learn/${lesson.slug}`} className={`lesson-row ${isDone ? "lesson-row-done" : ""}`}>
+                  <div className={`lesson-num ${isDone ? "lesson-num-done" : ""} font-mono`}>
                     {isDone ? (
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
                       </svg>
                     ) : lesson.lessonNumber}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-900 group-hover:text-[color:var(--color-teal)] transition-colors">{lesson.title}</p>
-                    <p className="text-sm text-gray-500 mt-0.5 truncate">{lesson.excerpt}</p>
+                  <div className="lesson-info">
+                    <p className="lesson-title">{lesson.title}</p>
+                    <p className="lesson-excerpt">{lesson.excerpt}</p>
                   </div>
-                  <div className="shrink-0 flex items-center gap-3">
-                    <span className="text-xs text-gray-400 hidden sm:block">{lesson.readingTime} min</span>
-                    <svg className="w-5 h-5 text-gray-300 group-hover:text-[color:var(--color-teal)] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
+                  <span className="lesson-meta font-mono">{lesson.readingTime} min</span>
+                  <svg className="lesson-arrow" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </Link>
               );
             })}
@@ -94,11 +86,9 @@ export default async function LearnPage() {
         )}
 
         {!session && (
-          <div className="mt-8 p-6 rounded-2xl text-center bg-[color:var(--color-teal-tint)]">
-            <p className="text-gray-700 font-medium mb-3">Sign in to track your progress across all lessons</p>
-            <Link href="/register" className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-semibold text-white text-sm sw-btn-primary">
-              Create Free Account
-            </Link>
+          <div className="learn-cta-box">
+            <p className="learn-cta-box-text">Sign in to track your progress across all lessons</p>
+            <Link href="/register" className="btn btn-primary">Create Free Account</Link>
           </div>
         )}
       </div>

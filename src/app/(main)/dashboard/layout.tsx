@@ -13,27 +13,24 @@ const navItems = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   return (
-    <div className="min-h-screen bg-[color:var(--color-paper)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-6">
-          <aside className="w-full lg:w-56 shrink-0">
-            <nav className="bg-white rounded-2xl border border-gray-100 p-3 flex lg:flex-col gap-1 overflow-x-auto lg:overflow-visible">
-              {navItems.map((item) => {
-                const isActive = item.href === "/dashboard" ? pathname === item.href : pathname?.startsWith(item.href);
-                return (
-                  <Link key={item.href} href={item.href}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${isActive ? "text-[color:var(--color-teal)] bg-[color:var(--color-teal-tint)]" : "text-gray-600 hover:bg-gray-50"}`}>
-                    <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
-                    </svg>
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
-          </aside>
-          <main className="flex-1 min-w-0">{children}</main>
-        </div>
+    <div className="dash-layout">
+      <div className="dash-inner">
+        <aside className="dash-sidebar">
+          <nav className="dash-sidebar-nav">
+            {navItems.map((item) => {
+              const isActive = item.href === "/dashboard" ? pathname === item.href : pathname?.startsWith(item.href);
+              return (
+                <Link key={item.href} href={item.href} className={`dash-nav-link ${isActive ? "dash-nav-link-active" : ""}`}>
+                  <svg className="dash-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
+                  </svg>
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </aside>
+        <main className="dash-content">{children}</main>
       </div>
     </div>
   );

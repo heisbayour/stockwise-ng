@@ -25,7 +25,7 @@ export default async function ArticleEditorPage({ params }: Props) {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6 sw-text-ink">
+      <h1 className="admin-page-title">
         {isNew ? "New Article" : `Edit: ${article?.title}`}
       </h1>
       <ArticleEditor article={article} authors={authors} currentUserId={session!.user.id} />

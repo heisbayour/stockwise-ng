@@ -15,10 +15,10 @@ export default async function WatchlistPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-1 sw-text-ink">Watchlist</h1>
-      <p className="text-gray-500 text-sm mb-6">
+      <h1 className="dash-page-title">Watchlist</h1>
+      <p className="dash-page-sub">
         Track Nigerian stocks you are interested in.{" "}
-        <a href="https://ngxgroup.com" target="_blank" rel="noopener noreferrer" className="font-medium sw-text-brand">
+        <a href="https://ngxgroup.com" target="_blank" rel="noopener noreferrer" className="form-link">
           Check live prices on NGX
         </a>
       </p>

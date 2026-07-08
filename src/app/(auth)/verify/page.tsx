@@ -2,7 +2,6 @@
 // src/app/(auth)/verify/page.tsx
 import { useState, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
 
 function VerifyForm() {
   const router = useRouter();
@@ -67,66 +66,62 @@ function VerifyForm() {
         body: JSON.stringify({ userId }),
       });
       const data = await res.json();
-      if (res.ok) { setSuccess("New code sent! Check your email."); setCode(["","","","","",""]); }
+      if (res.ok) { setSuccess("New code sent! Check your email."); setCode(["", "", "", "", "", ""]); }
       else setError(data.error || "Failed to resend");
     } catch { setError("Network error."); }
     setResending(false);
   }
 
   return (
-    <div className="w-full max-w-md">
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
-        <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center bg-[color:var(--color-teal-tint)]">
-          <svg className="w-8 h-8 sw-text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-        </div>
-
-        <h1 className="text-2xl font-bold mb-2 sw-text-ink">Check your email</h1>
-        <p className="text-sm text-gray-500 mb-8">
-          We sent a 6-digit code to <span className="font-medium text-gray-700">{email}</span>
-        </p>
-
-        <div className="flex gap-2 justify-center mb-6" onPaste={handlePaste}>
-          {code.map((digit, i) => (
-            <input
-              key={i}
-              ref={(el) => { inputs.current[i] = el; }}
-              type="text"
-              inputMode="numeric"
-              maxLength={1}
-              value={digit}
-              onChange={(e) => handleInput(i, e.target.value)}
-              onKeyDown={(e) => handleKeyDown(i, e)}
-              className="w-11 h-13 text-center text-xl font-bold rounded-xl border-2 focus:outline-none transition-colors"
-              style={{ borderColor: digit ? "var(--color-teal)" : "var(--color-line)", color: "var(--color-ink)", height: "52px" }}
-            />
-          ))}
-        </div>
-
-        {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
-        {success && <p className="mb-4 text-sm sw-text-brand">{success}</p>}
-
-        <button onClick={handleVerify} disabled={loading || code.join("").length !== 6}
-          className="w-full py-3 rounded-xl font-semibold text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed mb-4 sw-btn-primary">
-          {loading ? (
-            <span className="flex items-center justify-center gap-2">
-              <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
-              Verifying...
-            </span>
-          ) : "Verify Email"}
-        </button>
-
-        <p className="text-sm text-gray-500">
-          Did not receive it?{" "}
-          <button onClick={handleResend} disabled={resending} className="font-semibold disabled:opacity-50 sw-text-brand">
-            {resending ? "Sending..." : "Resend code"}
-          </button>
-        </p>
+    <div className="auth-card text-center">
+      <div className="auth-success-icon">
+        <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
       </div>
+
+      <h1 className="auth-card-title">Check your email</h1>
+      <p className="auth-card-sub">
+        We sent a 6-digit code to <strong>{email}</strong>
+      </p>
+
+      <div className="otp-root" onPaste={handlePaste}>
+        {code.map((digit, i) => (
+          <input
+            key={i}
+            ref={(el) => { inputs.current[i] = el; }}
+            type="text"
+            inputMode="numeric"
+            maxLength={1}
+            value={digit}
+            onChange={(e) => handleInput(i, e.target.value)}
+            onKeyDown={(e) => handleKeyDown(i, e)}
+            className={`otp-box ${digit ? "otp-box-filled" : ""}`}
+          />
+        ))}
+      </div>
+
+      {error && <p className="form-error">{error}</p>}
+      {success && <p className="settings-msg-ok">{success}</p>}
+
+      <button onClick={handleVerify} disabled={loading || code.join("").length !== 6} className="btn btn-primary btn-full">
+        {loading ? (
+          <>
+            <svg className="btn-spinner" fill="none" viewBox="0 0 24 24">
+              <circle className="spinner-track" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="spinner-head" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            Verifying...
+          </>
+        ) : "Verify Email"}
+      </button>
+
+      <p className="auth-footer-text">
+        Did not receive it?{" "}
+        <button onClick={handleResend} disabled={resending} className="form-link">
+          {resending ? "Sending..." : "Resend code"}
+        </button>
+      </p>
     </div>
   );
 }
