@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
 
 /* ============================================================
    STOCKWISE - Design System
@@ -9,7 +10,7 @@
 /* ---- THEME TOKENS ----------------------------------------- */
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", monospace;
 
   --color-ink: #0B1E2D;
@@ -54,6 +55,19 @@
 
   /* System interaction physics - consistent, crisp, never bouncy */
   --ease-system: cubic-bezier(0.2, 0.6, 0.2, 1);
+
+  /* Terminal mode - authenticated dashboard/admin surfaces only.
+     Public marketing pages never use these. The shift from
+     paper-and-ink to terminal-and-signal is the cue that the
+     person has moved from "being sold to" into "the instrument". */
+  --color-dash-bg: #08141F;
+  --color-dash-surface: #0E2333;
+  --color-dash-surface-raised: #12293C;
+  --color-dash-line: #1E3A4F;
+  --color-dash-ink: #EDF3F5;
+  --color-dash-ink-soft: #93A7B5;
+  --color-dash-ink-muted: #5D7385;
+  --color-dash-teal-glow: 0 0 0 1px rgba(4, 156, 136, 0.35), 0 0 24px -6px rgba(4, 156, 136, 0.35);
 }
 
 /* ---- RESET ------------------------------------------------- */
@@ -112,7 +126,7 @@ h5,
 h6 {
   font-family: var(--font-display);
   line-height: 1.15;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   color: var(--color-ink);
 }
 
@@ -2894,7 +2908,7 @@ h6 {
 /* ---- DASHBOARD -------------------------------------------- */
 .dash-layout {
   min-height: 100vh;
-  background: var(--color-paper-dim);
+  background: var(--color-dash-bg);
 }
 
 .dash-inner {
@@ -2924,8 +2938,8 @@ h6 {
 }
 
 .dash-sidebar-nav {
-  background: var(--color-white);
-  border: 1px solid var(--color-line);
+  background: var(--color-dash-surface);
+  border: 1px solid var(--color-dash-line);
   border-radius: 1rem;
   padding: 0.5rem;
   display: flex;
@@ -2952,20 +2966,21 @@ h6 {
   border-radius: 0.625rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--color-ink-soft);
-  transition: background 0.1s, color 0.1s;
+  color: var(--color-dash-ink-soft);
+  transition: background 0.15s var(--ease-system), color 0.15s var(--ease-system);
   white-space: nowrap;
 }
 
 .dash-nav-link:hover {
-  background: var(--color-paper-dim);
-  color: var(--color-ink);
+  background: var(--color-dash-surface-raised);
+  color: var(--color-dash-ink);
 }
 
 .dash-nav-link-active {
-  background: var(--color-teal-tint);
-  color: var(--color-teal-deep);
+  background: rgba(4, 156, 136, 0.14);
+  color: var(--color-teal);
   font-weight: 600;
+  box-shadow: inset 0 0 0 1px rgba(4, 156, 136, 0.35);
 }
 
 .dash-nav-icon {
@@ -2982,13 +2997,13 @@ h6 {
 .dash-page-title {
   font-size: 1.625rem;
   font-weight: 700;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
   margin-bottom: 0.25rem;
 }
 
 .dash-page-sub {
   font-size: 0.875rem;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-soft);
   margin-bottom: 1.75rem;
 }
 
@@ -2999,12 +3014,12 @@ h6 {
 .dash-welcome-name {
   font-size: 1.625rem;
   font-weight: 700;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
 }
 
 .dash-welcome-sub {
   font-size: 0.875rem;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-soft);
   margin-top: 0.25rem;
 }
 
@@ -3022,21 +3037,23 @@ h6 {
 }
 
 .dash-stat-card {
-  background: var(--color-white);
-  border: 1px solid var(--color-line);
+  background: var(--color-dash-surface);
+  border: 1px solid var(--color-dash-line);
   border-radius: 1rem;
   padding: 1.25rem;
-  transition: box-shadow 0.15s;
+  transition: box-shadow 0.2s var(--ease-system), border-color 0.2s var(--ease-system), transform 0.2s var(--ease-system);
 }
 
 .dash-stat-card:hover {
-  box-shadow: 0 4px 16px -4px rgba(11, 30, 45, 0.08);
+  box-shadow: var(--color-dash-teal-glow);
+  border-color: rgba(4, 156, 136, 0.4);
+  transform: translateY(-2px);
 }
 
 .dash-stat-label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.625rem;
@@ -3045,6 +3062,7 @@ h6 {
 .dash-stat-value {
   font-size: 2rem;
   font-weight: 800;
+  color: var(--color-dash-ink);
   font-variant-numeric: tabular-nums;
 }
 
@@ -3061,12 +3079,12 @@ h6 {
 }
 
 .dash-stat-gold {
-  color: var(--color-gold-deep);
+  color: var(--color-gold);
 }
 
 .dash-widget {
-  background: var(--color-white);
-  border: 1px solid var(--color-line);
+  background: var(--color-dash-surface);
+  border: 1px solid var(--color-dash-line);
   border-radius: 1rem;
   padding: 1.5rem;
   margin-bottom: 1.25rem;
@@ -3082,7 +3100,7 @@ h6 {
 .dash-widget-title {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
 }
 
 .dash-widget-link {
@@ -3098,10 +3116,11 @@ h6 {
 
 .dash-progress-track {
   height: 10px;
-  background: var(--color-paper-dim);
+  background: var(--color-dash-bg);
   border-radius: 9999px;
   overflow: hidden;
   margin-bottom: 0.75rem;
+  border: 1px solid var(--color-dash-line);
 }
 
 .dash-progress-fill {
@@ -3118,12 +3137,13 @@ h6 {
 }
 
 .dash-progress-text {
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-soft);
 }
 
 .dash-progress-pct {
   font-weight: 700;
-  color: var(--color-teal-deep);
+  color: var(--color-teal);
+  font-family: var(--font-mono);
 }
 
 .dash-next-lesson {
@@ -3132,9 +3152,9 @@ h6 {
   gap: 0.875rem;
   margin-top: 1rem;
   padding: 0.875rem 1rem;
-  border: 1.5px dashed var(--color-line);
+  border: 1.5px dashed var(--color-dash-line);
   border-radius: 0.875rem;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s var(--ease-system);
 }
 
 .dash-next-lesson:hover {
@@ -3145,10 +3165,11 @@ h6 {
   width: 32px;
   height: 32px;
   border-radius: 0.5rem;
-  background: var(--color-teal-tint);
-  color: var(--color-teal-deep);
+  background: rgba(4, 156, 136, 0.16);
+  color: var(--color-teal);
   font-size: 0.8125rem;
   font-weight: 700;
+  font-family: var(--font-mono);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3162,13 +3183,13 @@ h6 {
 
 .dash-next-label {
   font-size: 0.75rem;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-soft);
 }
 
 .dash-next-title {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -3181,40 +3202,40 @@ h6 {
   gap: 0.625rem;
   padding: 0.75rem 0.875rem;
   border-radius: 0.625rem;
-  transition: background 0.1s;
+  transition: background 0.15s var(--ease-system);
 }
 
 .dash-item-row:hover {
-  background: var(--color-paper-dim);
+  background: var(--color-dash-surface-raised);
 }
 
 .dash-item-name {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
 }
 
 .dash-item-sub {
   font-size: 0.75rem;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-soft);
 }
 
 .dash-item-ticker {
   font-size: 0.875rem;
   font-weight: 800;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
   font-family: var(--font-mono);
 }
 
 .dash-item-exchange {
   font-size: 0.75rem;
-  color: var(--color-ink-muted);
+  color: var(--color-dash-ink-muted);
 }
 
 .dash-empty {
   text-align: center;
   padding: 2.5rem;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-soft);
   font-size: 0.9375rem;
 }
 
@@ -3268,8 +3289,8 @@ h6 {
   align-items: center;
   gap: 1rem;
   padding: 1.125rem 1.25rem;
-  background: var(--color-white);
-  border: 1px solid var(--color-line);
+  background: var(--color-dash-surface);
+  border: 1px solid var(--color-dash-line);
   border-radius: 0.875rem;
   margin-bottom: 0.75rem;
 }
@@ -3282,7 +3303,7 @@ h6 {
 .saved-broker-name {
   font-size: 0.9375rem;
   font-weight: 700;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
   transition: color 0.1s;
 }
 
@@ -3292,7 +3313,7 @@ h6 {
 
 .saved-broker-meta {
   font-size: 0.8125rem;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-soft);
   margin-top: 0.25rem;
   display: flex;
   align-items: center;
@@ -3311,21 +3332,21 @@ h6 {
   font-weight: 600;
   padding: 0.375rem 0.75rem;
   border-radius: 0.5rem;
-  border: 1px solid #FCA5A5;
+  border: 1px solid rgba(220, 38, 38, 0.5);
   color: var(--color-danger);
-  background: var(--color-white);
-  transition: background 0.1s;
+  background: transparent;
+  transition: background 0.15s var(--ease-system);
   cursor: pointer;
 }
 
 .btn-remove:hover {
-  background: var(--color-danger-tint);
+  background: rgba(220, 38, 38, 0.14);
 }
 
 /* Watchlist */
 .watchlist-add-card {
-  background: var(--color-white);
-  border: 1px solid var(--color-line);
+  background: var(--color-dash-surface);
+  border: 1px solid var(--color-dash-line);
   border-radius: 1rem;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
@@ -3334,7 +3355,7 @@ h6 {
 .watchlist-add-title {
   font-size: 0.875rem;
   font-weight: 700;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
   margin-bottom: 1rem;
 }
 
@@ -3346,8 +3367,8 @@ h6 {
 }
 
 .watchlist-table {
-  background: var(--color-white);
-  border: 1px solid var(--color-line);
+  background: var(--color-dash-surface);
+  border: 1px solid var(--color-dash-line);
   border-radius: 1rem;
   overflow: hidden;
 }
@@ -3357,8 +3378,8 @@ h6 {
   grid-template-columns: 90px 1fr auto;
   gap: 1rem;
   padding: 0.875rem 1.25rem;
-  border-bottom: 1px solid var(--color-line);
-  background: var(--color-paper-dim);
+  border-bottom: 1px solid var(--color-dash-line);
+  background: var(--color-dash-bg);
 }
 
 .watchlist-table-head-cell {
@@ -3366,7 +3387,7 @@ h6 {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-muted);
 }
 
 .watchlist-table-row {
@@ -3374,9 +3395,9 @@ h6 {
   grid-template-columns: 90px 1fr auto;
   gap: 1rem;
   padding: 0.875rem 1.25rem;
-  border-bottom: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-dash-line);
   align-items: center;
-  transition: background 0.1s;
+  transition: background 0.15s var(--ease-system);
 }
 
 .watchlist-table-row:last-child {
@@ -3384,34 +3405,34 @@ h6 {
 }
 
 .watchlist-table-row:hover {
-  background: var(--color-paper-dim);
+  background: var(--color-dash-surface-raised);
 }
 
 .watchlist-ticker {
   font-size: 0.9375rem;
   font-weight: 800;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
   font-family: var(--font-mono);
 }
 
 .watchlist-company {
   font-size: 0.875rem;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-soft);
 }
 
 .watchlist-hint {
   margin-top: 0.875rem;
   padding: 0.75rem 1rem;
-  background: var(--color-paper-dim);
+  background: var(--color-dash-bg);
   border-radius: 0.625rem;
   font-size: 0.8125rem;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-soft);
 }
 
 /* Settings */
 .settings-card {
-  background: var(--color-white);
-  border: 1px solid var(--color-line);
+  background: var(--color-dash-surface);
+  border: 1px solid var(--color-dash-line);
   border-radius: 1rem;
   padding: 1.5rem;
   margin-bottom: 1.25rem;
@@ -3421,10 +3442,10 @@ h6 {
 .settings-card-title {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
   margin-bottom: 1.375rem;
   padding-bottom: 0.875rem;
-  border-bottom: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-dash-line);
 }
 
 .settings-field {
@@ -3439,19 +3460,19 @@ h6 {
   border-radius: 0.625rem;
   font-size: 0.875rem;
   font-weight: 600;
-  background: var(--color-teal-tint);
-  color: var(--color-teal-deep);
+  background: rgba(4, 156, 136, 0.14);
+  color: var(--color-teal);
 }
 
 .settings-role-desc {
   font-size: 0.8125rem;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-soft);
   margin-top: 0.75rem;
 }
 
 .settings-msg-ok {
   font-size: 0.875rem;
-  color: var(--color-teal-deep);
+  color: var(--color-teal);
   margin-top: 0.875rem;
 }
 
@@ -3469,14 +3490,14 @@ h6 {
 .admin-layout {
   min-height: 100vh;
   display: flex;
-  background: var(--color-paper-dim);
+  background: var(--color-dash-bg);
 }
 
 .admin-sidebar {
   width: 236px;
   flex-shrink: 0;
-  background: var(--color-white);
-  border-right: 1px solid var(--color-line);
+  background: var(--color-dash-surface);
+  border-right: 1px solid var(--color-dash-line);
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -3496,7 +3517,7 @@ h6 {
 
 .admin-sidebar-header {
   padding: 1.375rem 1.25rem;
-  border-bottom: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-dash-line);
 }
 
 .admin-sidebar-logo {
@@ -3519,13 +3540,13 @@ h6 {
 .admin-sidebar-brand {
   font-weight: 700;
   font-size: 0.9375rem;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
   letter-spacing: -0.02em;
 }
 
 .admin-sidebar-role {
   font-size: 0.6875rem;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-soft);
 }
 
 .admin-sidebar-nav {
@@ -3541,8 +3562,8 @@ h6 {
   border-radius: 0.625rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--color-ink-soft);
-  transition: background 0.1s, color 0.1s;
+  color: var(--color-dash-ink-soft);
+  transition: background 0.15s var(--ease-system), color 0.15s var(--ease-system);
   margin-bottom: 0.25rem;
   width: 100%;
   text-align: left;
@@ -3552,14 +3573,15 @@ h6 {
 }
 
 .admin-nav-item:hover {
-  background: var(--color-paper-dim);
-  color: var(--color-ink);
+  background: var(--color-dash-surface-raised);
+  color: var(--color-dash-ink);
 }
 
 .admin-nav-active {
-  background: var(--color-teal-tint);
-  color: var(--color-teal-deep);
+  background: rgba(4, 156, 136, 0.14);
+  color: var(--color-teal);
   font-weight: 600;
+  box-shadow: inset 0 0 0 1px rgba(4, 156, 136, 0.35);
 }
 
 .admin-nav-item-danger {
@@ -3567,25 +3589,25 @@ h6 {
 }
 
 .admin-nav-item-danger:hover {
-  background: var(--color-danger-tint);
+  background: rgba(220, 38, 38, 0.14);
   color: var(--color-danger);
 }
 
 .admin-sidebar-footer {
   padding: 0.75rem;
-  border-top: 1px solid var(--color-line);
+  border-top: 1px solid var(--color-dash-line);
 }
 
 .admin-page-title {
   font-size: 1.625rem;
   font-weight: 700;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
   margin-bottom: 0.375rem;
 }
 
 .admin-page-sub {
   font-size: 0.875rem;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-soft);
   margin-bottom: 2rem;
 }
 
@@ -3610,15 +3632,17 @@ h6 {
 }
 
 .admin-stat-card {
-  background: var(--color-white);
-  border: 1px solid var(--color-line);
+  background: var(--color-dash-surface);
+  border: 1px solid var(--color-dash-line);
   border-radius: 1rem;
   padding: 1.25rem;
-  transition: box-shadow 0.15s;
+  transition: box-shadow 0.2s var(--ease-system), border-color 0.2s var(--ease-system), transform 0.2s var(--ease-system);
 }
 
 .admin-stat-card:hover {
-  box-shadow: 0 4px 16px -4px rgba(11, 30, 45, 0.08);
+  box-shadow: var(--color-dash-teal-glow);
+  border-color: rgba(4, 156, 136, 0.4);
+  transform: translateY(-2px);
 }
 
 .admin-stat-row {
@@ -3631,7 +3655,7 @@ h6 {
 .admin-stat-label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -3668,7 +3692,7 @@ h6 {
 .admin-stat-val {
   font-size: 2rem;
   font-weight: 800;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
   font-variant-numeric: tabular-nums;
 }
 
@@ -3682,19 +3706,19 @@ h6 {
 }
 
 .admin-alert-warning {
-  background: var(--color-warning-tint);
-  border: 1px solid #FDE68A;
+  background: rgba(217, 119, 6, 0.14);
+  border: 1px solid rgba(217, 119, 6, 0.35);
 }
 
 .admin-alert-info {
-  background: var(--color-info-tint);
-  border: 1px solid #BFDBFE;
+  background: rgba(59, 130, 246, 0.14);
+  border: 1px solid rgba(59, 130, 246, 0.35);
 }
 
 .admin-alert-text {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
   display: flex;
   align-items: center;
   gap: 0.625rem;
@@ -3707,8 +3731,8 @@ h6 {
 }
 
 .admin-card {
-  background: var(--color-white);
-  border: 1px solid var(--color-line);
+  background: var(--color-dash-surface);
+  border: 1px solid var(--color-dash-line);
   border-radius: 1rem;
   overflow: hidden;
   margin-bottom: 1.5rem;
@@ -3716,7 +3740,7 @@ h6 {
 
 .admin-card-header {
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-dash-line);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -3725,7 +3749,7 @@ h6 {
 .admin-card-title {
   font-size: 0.9375rem;
   font-weight: 700;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
 }
 
 .admin-card-body {
@@ -3779,16 +3803,16 @@ h6 {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: var(--color-ink-soft);
-  background: var(--color-paper-dim);
-  border-bottom: 1px solid var(--color-line);
+  color: var(--color-dash-ink-muted);
+  background: var(--color-dash-bg);
+  border-bottom: 1px solid var(--color-dash-line);
 }
 
 .admin-table-row td {
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-dash-line);
   font-size: 0.875rem;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
   vertical-align: middle;
 }
 
@@ -3797,7 +3821,7 @@ h6 {
 }
 
 .admin-table-row:hover td {
-  background: rgba(4, 156, 136, 0.02);
+  background: rgba(4, 156, 136, 0.06);
 }
 
 .admin-user-cell {
@@ -3822,17 +3846,18 @@ h6 {
 
 .admin-user-name {
   font-weight: 600;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
 }
 
 .admin-user-email {
   font-size: 0.75rem;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-soft);
 }
 
 .admin-clicks-val {
   font-weight: 700;
   color: var(--color-teal);
+  font-family: var(--font-mono);
 }
 
 .admin-action-row {
@@ -3848,7 +3873,7 @@ h6 {
   padding: 0.375rem 0.75rem;
   border-radius: 0.5rem;
   border: 1px solid;
-  transition: background 0.1s;
+  transition: background 0.15s var(--ease-system);
   cursor: pointer;
   background: transparent;
 }
@@ -3860,63 +3885,63 @@ h6 {
 
 .admin-btn-teal {
   border-color: var(--color-teal);
-  color: var(--color-teal-deep);
+  color: var(--color-teal);
 }
 
 .admin-btn-teal:hover:not(:disabled) {
-  background: var(--color-teal-tint);
+  background: rgba(4, 156, 136, 0.14);
 }
 
 .admin-btn-red {
-  border-color: #FCA5A5;
+  border-color: rgba(220, 38, 38, 0.5);
   color: var(--color-danger);
 }
 
 .admin-btn-red:hover:not(:disabled) {
-  background: var(--color-danger-tint);
+  background: rgba(220, 38, 38, 0.14);
 }
 
 .admin-btn-green {
-  border-color: #BBF7D0;
+  border-color: rgba(22, 163, 74, 0.5);
   color: var(--color-success);
 }
 
 .admin-btn-green:hover:not(:disabled) {
-  background: var(--color-success-tint);
+  background: rgba(22, 163, 74, 0.14);
 }
 
 .admin-btn-indigo {
-  border-color: #C7D2FE;
+  border-color: rgba(99, 102, 241, 0.5);
   color: var(--color-indigo);
 }
 
 .admin-btn-indigo:hover:not(:disabled) {
-  background: var(--color-indigo-tint);
+  background: rgba(99, 102, 241, 0.14);
 }
 
 .admin-btn-gold {
-  border-color: #FDE68A;
-  color: var(--color-warning);
+  border-color: rgba(227, 168, 87, 0.5);
+  color: var(--color-gold);
 }
 
 .admin-btn-gold:hover:not(:disabled) {
-  background: var(--color-warning-tint);
+  background: rgba(227, 168, 87, 0.14);
 }
 
 .admin-btn-slate {
-  border-color: var(--color-line);
-  color: var(--color-ink-soft);
+  border-color: var(--color-dash-line);
+  color: var(--color-dash-ink-soft);
 }
 
 .admin-btn-slate:hover:not(:disabled) {
-  background: var(--color-paper-dim);
+  background: var(--color-dash-surface-raised);
 }
 
 .admin-empty {
   padding: 4rem;
   text-align: center;
   font-size: 0.9375rem;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-soft);
 }
 
 .admin-bar-row {
@@ -3935,9 +3960,10 @@ h6 {
   justify-content: center;
   font-size: 0.75rem;
   font-weight: 700;
-  background: var(--color-paper-dim);
-  color: var(--color-ink-soft);
+  background: var(--color-dash-surface-raised);
+  color: var(--color-dash-ink-soft);
   flex-shrink: 0;
+  font-family: var(--font-mono);
 }
 
 .admin-bar-rank-1 {
@@ -3949,20 +3975,21 @@ h6 {
   flex: 1;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
 }
 
 .admin-bar-val {
   font-size: 0.875rem;
   font-weight: 700;
-  color: var(--color-teal-deep);
+  color: var(--color-teal);
   font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
 }
 
 /* Filter bar */
 .admin-filter-bar {
-  background: var(--color-white);
-  border: 1px solid var(--color-line);
+  background: var(--color-dash-surface);
+  border: 1px solid var(--color-dash-line);
   border-radius: 0.875rem;
   padding: 1rem 1.25rem;
   display: flex;
@@ -3983,27 +4010,27 @@ h6 {
   flex: 1;
   min-width: 200px;
   padding: 0.6875rem 0.875rem;
-  border: 1.5px solid var(--color-line);
+  border: 1.5px solid var(--color-dash-line);
   border-radius: 0.5rem;
   font-size: 0.875rem;
-  color: var(--color-ink);
-  background: var(--color-paper-dim);
-  transition: border-color 0.15s, background 0.15s;
+  color: var(--color-dash-ink);
+  background: var(--color-dash-bg);
+  transition: border-color 0.15s var(--ease-system), background 0.15s var(--ease-system);
 }
 
 .admin-filter-input:focus {
   outline: none;
   border-color: var(--color-teal);
-  background: var(--color-white);
+  background: var(--color-dash-surface);
 }
 
 .admin-filter-select {
   padding: 0.5625rem 0.875rem;
-  border: 1.5px solid var(--color-line);
+  border: 1.5px solid var(--color-dash-line);
   border-radius: 0.5rem;
   font-size: 0.875rem;
-  color: var(--color-ink);
-  background: var(--color-paper-dim);
+  color: var(--color-dash-ink);
+  background: var(--color-dash-bg);
   cursor: pointer;
 }
 
@@ -4016,7 +4043,7 @@ h6 {
   font-weight: 600;
   cursor: pointer;
   border: none;
-  transition: background 0.15s;
+  transition: background 0.15s var(--ease-system);
 }
 
 .admin-filter-submit:hover {
@@ -4025,12 +4052,12 @@ h6 {
 
 .admin-filter-clear {
   padding: 0.5625rem 1rem;
-  border: 1.5px solid var(--color-line);
-  color: var(--color-ink-soft);
+  border: 1.5px solid var(--color-dash-line);
+  color: var(--color-dash-ink-soft);
   border-radius: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
-  background: var(--color-white);
+  background: transparent;
   cursor: pointer;
 }
 
@@ -4059,8 +4086,8 @@ h6 {
 }
 
 .editor-card {
-  background: var(--color-white);
-  border: 1px solid var(--color-line);
+  background: var(--color-dash-surface);
+  border: 1px solid var(--color-dash-line);
   border-radius: 1rem;
   padding: 1.5rem;
 }
@@ -4068,7 +4095,7 @@ h6 {
 .editor-card-title {
   font-size: 0.875rem;
   font-weight: 700;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
   margin-bottom: 1rem;
 }
 
@@ -4084,7 +4111,7 @@ h6 {
 
 .editor-slug-prefix {
   font-size: 0.8125rem;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-soft);
   white-space: nowrap;
 }
 
@@ -4102,18 +4129,18 @@ h6 {
 }
 
 .editor-quill-wrap {
-  background: var(--color-white);
-  border: 1px solid var(--color-line);
+  background: var(--color-dash-surface);
+  border: 1px solid var(--color-dash-line);
   border-radius: 1rem;
   overflow: hidden;
 }
 
 .editor-quill-header {
   padding: 0.875rem 1.25rem;
-  border-bottom: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-dash-line);
   font-size: 0.875rem;
   font-weight: 700;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
 }
 
 .editor-quill-mount {
@@ -4135,12 +4162,12 @@ h6 {
   gap: 0.5rem;
   width: 100%;
   padding: 0.875rem;
-  border: 2px dashed var(--color-line);
+  border: 2px dashed var(--color-dash-line);
   border-radius: 0.625rem;
   font-size: 0.875rem;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-soft);
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
+  transition: border-color 0.15s var(--ease-system), color 0.15s var(--ease-system);
 }
 
 .editor-upload-label:hover {
@@ -4162,7 +4189,7 @@ h6 {
 
 .editor-msg-ok {
   font-size: 0.8125rem;
-  color: var(--color-teal-deep);
+  color: var(--color-teal);
 }
 
 .editor-msg-err {
@@ -4185,8 +4212,8 @@ h6 {
 }
 
 .leads-stat-card {
-  background: var(--color-white);
-  border: 1px solid var(--color-line);
+  background: var(--color-dash-surface);
+  border: 1px solid var(--color-dash-line);
   border-radius: 1rem;
   padding: 1.25rem;
 }
@@ -4196,20 +4223,20 @@ h6 {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-ink-soft);
+  color: var(--color-dash-ink-muted);
   margin-bottom: 0.5rem;
 }
 
 .leads-stat-val {
   font-size: 1.75rem;
   font-weight: 800;
-  color: var(--color-ink);
+  color: var(--color-dash-ink);
   font-variant-numeric: tabular-nums;
 }
 
 .leads-bar-track {
   height: 6px;
-  background: var(--color-paper-dim);
+  background: var(--color-dash-bg);
   border-radius: 9999px;
   overflow: hidden;
 }
@@ -4221,8 +4248,8 @@ h6 {
 }
 
 .leads-info-card {
-  background: var(--color-white);
-  border: 1px solid var(--color-line);
+  background: var(--color-dash-surface);
+  border: 1px solid var(--color-dash-line);
   border-radius: 1rem;
   padding: 1.5rem;
 }
@@ -4238,15 +4265,15 @@ h6 {
 }
 
 .leads-info-teal {
-  background: var(--color-teal-tint);
+  background: rgba(4, 156, 136, 0.14);
 }
 
 .leads-info-indigo {
-  background: var(--color-indigo-tint);
+  background: rgba(99, 102, 241, 0.14);
 }
 
 .leads-info-gold {
-  background: var(--color-gold-tint);
+  background: rgba(227, 168, 87, 0.14);
 }
 
 .leads-info-title {
@@ -4256,7 +4283,7 @@ h6 {
 }
 
 .leads-info-teal .leads-info-title {
-  color: var(--color-teal-deep);
+  color: var(--color-teal);
 }
 
 .leads-info-indigo .leads-info-title {
@@ -4264,24 +4291,25 @@ h6 {
 }
 
 .leads-info-gold .leads-info-title {
-  color: var(--color-gold-deep);
+  color: var(--color-gold);
 }
 
 .leads-info-desc {
   font-size: 0.75rem;
   line-height: 1.6;
+  color: var(--color-dash-ink-soft);
 }
 
 .leads-info-teal .leads-info-desc {
-  color: var(--color-teal-deep);
+  color: var(--color-dash-ink-soft);
 }
 
 .leads-info-indigo .leads-info-desc {
-  color: var(--color-indigo);
+  color: var(--color-dash-ink-soft);
 }
 
 .leads-info-gold .leads-info-desc {
-  color: var(--color-gold-deep);
+  color: var(--color-dash-ink-soft);
 }
 
 /* ---- STATIC PAGES ---------------------------------------- */
@@ -4445,6 +4473,45 @@ h6 {
   min-height: 400px;
   padding: 1.25rem !important;
   line-height: 1.8 !important;
+}
+
+/* ---- LEDGER MOTIF ------------------------------------------
+   Signature element: every number that represents real money,
+   a rate, or a count reads as ledger data - monospaced, tracked
+   out, tabular. A stat label gets a small tick mark instead of
+   floating loose above its number, like a line item. --------- */
+.stats-value,
+.broker-card-stat-value,
+.dash-stat-value,
+.admin-stat-val,
+.leads-stat-val {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.stats-label,
+.broker-card-stat-label,
+.dash-stat-label,
+.admin-stat-label,
+.leads-stat-label {
+  position: relative;
+  padding-left: 0.625rem;
+}
+
+.stats-label::before,
+.broker-card-stat-label::before,
+.dash-stat-label::before,
+.admin-stat-label::before,
+.leads-stat-label::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  width: 3px;
+  height: 0.75em;
+  background: var(--color-teal);
+  border-radius: 1px;
 }
 
 /* ---- SYSTEM SURFACE ELEVATION ------------------------------
